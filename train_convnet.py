@@ -11,6 +11,17 @@ from keras import backend as K
 
 batch_size = 128
 epochs = 12
+convolution_layers = [
+    {'kernels': 32, 'size': (3, 3), 'activation': 'relu'},
+    {'kernels': 64, 'size': (3, 3), 'activation': 'relu'}
+]
+maxpooling_pool_size = (2, 2)
+maxpooling_dropout = 0.25
+dense_layers = [
+    {'size': 128, 'activation': 'relu'}
+]
+dense_dropout = 0.0
+final_dropout = 0.5
 
 # the data, shuffled and split between train and test sets
 (x_train, y_train), (x_test, y_test) = mnist.load_data()
@@ -27,15 +38,22 @@ y_train = to_categorical(y_train, 10)
 y_test = to_categorical(y_test, 10)
 
 model = Sequential()
-model.add(Conv2D(32, kernel_size=(3, 3),
-                 activation='relu',
+model.add(Conv2D(convolution_layers[0]['kernels'],
+                 kernel_size=convolution_layers[0]['size'],
+                 activation=convolution_layers[0]['activation'],
                  input_shape=input_shape))
-model.add(Conv2D(64, (3, 3), activation='relu'))
-model.add(MaxPooling2D(pool_size=(2, 2)))
-model.add(Dropout(0.25))
+for layer in convolution_layers[1:]:
+    model.add(Conv2D(layer['kernels'],
+                     kernel_size=layer['size'],
+                     activation=layer['activation']))
+model.add(MaxPooling2D(pool_size=maxpooling_pool_size))
+model.add(Dropout(maxpooling_dropout))
 model.add(Flatten())
-model.add(Dense(128, activation='relu'))
-model.add(Dropout(0.5))
+for layer in dense_layers:
+    model.add(Dense(layer['size'], activation=layer['activation']))
+    if layer != dense_layers[-1]:
+        model.add(Dropout(dense_dropout))
+model.add(Dropout(final_dropout))
 model.add(Dense(10, activation='softmax'))
 
 model.compile(loss=categorical_crossentropy,
