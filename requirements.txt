@@ -1,6 +1,5 @@
 wheel
 numpy
-tensorflow-gpu
 keras
 pymongo
 sacred
