@@ -4,3 +4,4 @@ tensorflow-gpu
 keras
 pymongo
 sacred
+GitPython
