@@ -6,14 +6,6 @@ from sacred.observers import MongoObserver
 ex = Experiment("MNIST-Convnet")
 ex.observers.append(MongoObserver.create())
 
-from keras.datasets import mnist
-from keras.models import Sequential
-from keras.layers import Dense, Dropout, Flatten, Conv2D, MaxPooling2D
-from keras.utils import to_categorical
-from keras.losses import categorical_crossentropy
-from keras.optimizers import Adadelta
-from keras import backend as K
-
 
 @ex.config
 def confnet_config():
@@ -38,6 +30,13 @@ def define_and_train(batch_size, epochs,
                      maxpooling_pool_size, maxpooling_dropout,
                      dense_layers, dense_dropout,
                      final_dropout):
+    from keras.datasets import mnist
+    from keras.models import Sequential
+    from keras.layers import Dense, Dropout, Flatten, Conv2D, MaxPooling2D
+    from keras.utils import to_categorical
+    from keras.losses import categorical_crossentropy
+    from keras.optimizers import Adadelta
+    from keras import backend as K
     # the data, shuffled and split between train and test sets
     (x_train, y_train), (x_test, y_test) = mnist.load_data()
 
