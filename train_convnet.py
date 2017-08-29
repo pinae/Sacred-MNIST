@@ -28,6 +28,16 @@ def confnet_config():
     final_dropout = 0.5
 
 
+@ex.capture
+def log_performance(_run, logs):
+    _run.add_artifact("weights.hdf5")
+    _run.log_scalar("loss", float(logs.get('loss')))
+    _run.log_scalar("accuracy", float(logs.get('acc')))
+    _run.log_scalar("val_loss", float(logs.get('val_loss')))
+    _run.log_scalar("val_accuracy", float(logs.get('val_acc')))
+    _run.result = float(logs.get('val_acc'))
+
+
 @ex.automain
 def define_and_train(batch_size, epochs,
                      convolution_layers,
@@ -41,6 +51,12 @@ def define_and_train(batch_size, epochs,
     from keras.losses import categorical_crossentropy
     from keras.optimizers import Adadelta
     from keras import backend as K
+    from keras.callbacks import ModelCheckpoint, Callback
+
+    class LogPerformance(Callback):
+        def on_epoch_end(self, _, logs={}):
+            log_performance(logs=logs)
+
     # the data, shuffled and split between train and test sets
     (x_train, y_train), (x_test, y_test) = mnist.load_data()
 
@@ -82,7 +98,11 @@ def define_and_train(batch_size, epochs,
               batch_size=batch_size,
               epochs=epochs,
               verbose=1,
-              validation_data=(x_test, y_test))
+              validation_data=(x_test, y_test),
+              callbacks=[ModelCheckpoint("weights.hdf5", monitor='val_loss',
+                                         save_best_only=True, mode='auto', period=1),
+                         LogPerformance()])
     score = model.evaluate(x_test, y_test, verbose=0)
     print('Test loss:', score[0])
     print('Test accuracy:', score[1])
+    return score[1]

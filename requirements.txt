@@ -4,3 +4,4 @@ keras
 pymongo
 sacred
 GitPython
+h5py
