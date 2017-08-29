@@ -3,8 +3,12 @@
 from __future__ import division, print_function, unicode_literals
 from sacred import Experiment
 from sacred.observers import MongoObserver
+from sacred.utils import apply_backspaces_and_linefeeds
+
+
 ex = Experiment("MNIST-Convnet")
 ex.observers.append(MongoObserver.create())
+ex.captured_out_filter = apply_backspaces_and_linefeeds
 
 
 @ex.config
