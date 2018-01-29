@@ -6,7 +6,7 @@ MNIST-Example with Keras using Sacred
 We strongly recommend to use a virtualenv:
 
 ```
-pyvenv env
+python3 -m venv env
 source env/bin/activate
 ```
 
