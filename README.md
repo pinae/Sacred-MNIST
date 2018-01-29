@@ -17,6 +17,18 @@ pip install wheel
 pip install -r requirements.txt
 ```
 
+Install TensorFlow in the CPU-Version:
+
+```
+pip install tensorflow
+```
+
+or GPU-Version:
+
+```
+pip install tensorflow-gpu
+```
+
 ## Training
 
 To train the network simply run:
