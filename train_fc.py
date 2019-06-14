@@ -55,7 +55,7 @@ from keras.layers import Conv2D, MaxPooling2D
 model.add(Conv2D(32, kernel_size=(3, 3),
                  activation='relu',
                  input_shape=input_shape))
-model.add(Conv2D(64, (3, 3), activation='relu'))
+model.add(Conv2D(64, kernel_size=(3, 3), activation='relu'))
 model.add(MaxPooling2D(pool_size=(2, 2)))
 model.add(Dropout(0.25))
 
@@ -79,16 +79,24 @@ history = model.fit(x_train, y_train,
 )
 
 from pandas import DataFrame
-df = DataFrame(data={
-    'epoch': history.epoch * 4,
-    'loss on': ['loss'] * len(history.epoch) + ['val_loss'] * len(history.epoch) +
-               ['accuracy'] * len(history.epoch) + ['val_accuracy'] * len(history.epoch),
-    'loss': history.history['loss'] + history.history['val_loss'] +
-            history.history['acc'] + history.history['val_acc']
+df_loss = DataFrame(data={
+    'Epoche': history.epoch * 2,
+    'Legende': ['Loss auf Trainingsdaten'] * len(history.epoch) + ['Loss auf Testdaten'] * len(history.epoch),
+    'Loss': history.history['loss'] + history.history['val_loss']
+})
+df_accuracy = DataFrame(data={
+    'Epoche': history.epoch * 2,
+    'Legende': ['Accuracy auf Trainingsdaten'] * len(history.epoch) + ['Accuracy auf Testdaten'] * len(history.epoch),
+    'Accuracy': history.history['acc'] + history.history['val_acc']
 })
 
 import altair as alt
-chart = alt.Chart(df).mark_line().encode(x='epoch', y='loss', color='loss on')
+chart_loss = alt.Chart(df_loss).mark_line().encode(
+    x='Epoche', y='Loss', color='Legende')
+chart_accuracy = alt.Chart(df_accuracy).mark_line().encode(
+    x='Epoche', y='Accuracy', color='Legende')
+chart = chart_loss + chart_accuracy
+chart.resolve_scale(y='independent')
 chart.save('chart.html')
 
 score = model.evaluate(x_test, y_test, verbose=0)
