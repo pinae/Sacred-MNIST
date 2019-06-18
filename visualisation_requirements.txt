@@ -1,3 +1,5 @@
 pillow
 pandas
+vega
 altair
+jupyter
