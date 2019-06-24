@@ -2,4 +2,5 @@ pillow
 pandas
 vega
 altair
+pydot
 jupyter
