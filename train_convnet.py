@@ -32,10 +32,10 @@ def confnet_config():
 def log_performance(_run, logs):
     _run.add_artifact("weights.hdf5")
     _run.log_scalar("loss", float(logs.get('loss')))
-    _run.log_scalar("accuracy", float(logs.get('acc')))
+    _run.log_scalar("accuracy", float(logs.get('accuracy')))
     _run.log_scalar("val_loss", float(logs.get('val_loss')))
-    _run.log_scalar("val_accuracy", float(logs.get('val_acc')))
-    _run.result = float(logs.get('val_acc'))
+    _run.log_scalar("val_accuracy", float(logs.get('val_accuracy')))
+    _run.result = float(logs.get('val_accuracy'))
 
 
 @ex.automain
