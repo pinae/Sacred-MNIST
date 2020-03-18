@@ -1,13 +1,13 @@
-#!/usr/bin/python3
 # -*- coding: utf-8 -*-
-from __future__ import division, print_function, unicode_literals
-from keras.datasets import mnist
-from keras.models import Sequential
-from keras.layers import Dense, Flatten, Dropout
-from keras.utils import to_categorical
-from keras.losses import categorical_crossentropy
-from keras.optimizers import Adam
-import keras.backend as K
+from tensorflow.keras.datasets import mnist
+from tensorflow.keras.models import Sequential
+from tensorflow.keras.layers import Dense, Flatten, Dropout
+from tensorflow.keras.utils import to_categorical
+from tensorflow.keras.losses import categorical_crossentropy
+from tensorflow.keras.optimizers import Adam
+import tensorflow.keras.backend as K
+from gpu_helpers import init_all_gpu
+init_all_gpu()
 
 batch_size = 128
 num_classes = 10
@@ -51,7 +51,7 @@ y_test = to_categorical(y_test, num_classes)
 
 model = Sequential()
 
-from keras.layers import Conv2D, MaxPooling2D
+from tensorflow.keras.layers import Conv2D, MaxPooling2D
 model.add(Conv2D(32, kernel_size=(3, 3),
                  activation='relu',
                  input_shape=input_shape))
@@ -87,7 +87,7 @@ df_loss = DataFrame(data={
 df_accuracy = DataFrame(data={
     'Epoche': history.epoch * 2,
     'Legende': ['Accuracy auf Trainingsdaten'] * len(history.epoch) + ['Accuracy auf Testdaten'] * len(history.epoch),
-    'Accuracy': history.history['acc'] + history.history['val_acc']
+    'Accuracy': history.history['accuracy'] + history.history['val_accuracy']
 })
 
 import altair as alt

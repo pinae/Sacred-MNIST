@@ -1,13 +1,11 @@
-#!/usr/bin/python3
 # -*- coding: utf-8 -*-
-from __future__ import division, print_function, unicode_literals
 from sacred import Experiment
 from sacred.observers import MongoObserver
 from sacred.utils import apply_backspaces_and_linefeeds
 
 
 ex = Experiment("MNIST-Convnet")
-ex.observers.append(MongoObserver.create())
+ex.observers.append(MongoObserver())
 ex.captured_out_filter = apply_backspaces_and_linefeeds
 
 
@@ -32,10 +30,10 @@ def confnet_config():
 def log_performance(_run, logs):
     _run.add_artifact("weights.hdf5")
     _run.log_scalar("loss", float(logs.get('loss')))
-    _run.log_scalar("accuracy", float(logs.get('acc')))
+    _run.log_scalar("accuracy", float(logs.get('accuracy')))
     _run.log_scalar("val_loss", float(logs.get('val_loss')))
-    _run.log_scalar("val_accuracy", float(logs.get('val_acc')))
-    _run.result = float(logs.get('val_acc'))
+    _run.log_scalar("val_accuracy", float(logs.get('val_accuracy')))
+    _run.result = float(logs.get('val_accuracy'))
 
 
 @ex.automain
@@ -44,14 +42,16 @@ def define_and_train(batch_size, epochs,
                      maxpooling_pool_size, maxpooling_dropout,
                      dense_layers, dense_dropout,
                      final_dropout):
-    from keras.datasets import mnist
-    from keras.models import Sequential
-    from keras.layers import Dense, Dropout, Flatten, Conv2D, MaxPooling2D
-    from keras.utils import to_categorical
-    from keras.losses import categorical_crossentropy
-    from keras.optimizers import Adadelta
-    from keras import backend as K
-    from keras.callbacks import ModelCheckpoint, Callback
+    from tensorflow.keras.datasets import mnist
+    from tensorflow.keras.models import Sequential
+    from tensorflow.keras.layers import Dense, Dropout, Flatten, Conv2D, MaxPooling2D
+    from tensorflow.keras.utils import to_categorical
+    from tensorflow.keras.losses import categorical_crossentropy
+    from tensorflow.keras.optimizers import Adadelta
+    from tensorflow.keras import backend as K
+    from tensorflow.keras.callbacks import ModelCheckpoint, Callback
+    from gpu_helpers import init_all_gpu
+    init_all_gpu()
 
     class LogPerformance(Callback):
         def on_epoch_end(self, _, logs={}):

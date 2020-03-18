@@ -47,6 +47,7 @@ def list_experiments(status='QUEUED'):
         print_dict(ex['config'], indentation=2)
         print("----------------------------------------")
 
+
 if __name__ == "__main__":
     parser = argparse.ArgumentParser(description="Manage queued Sacred experiments.\n" +
                                                  "If called without parameters the queue_manager will fetch " +

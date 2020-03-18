@@ -1,7 +1,6 @@
 wheel
 numpy
 tensorflow
-keras
 pymongo
 sacred
 GitPython
