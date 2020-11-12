@@ -1,7 +1,7 @@
 wheel
-numpy
+numpy<1.19.0
 tensorflow
 pymongo
 sacred
 GitPython
-h5py
+h5py<2.11.0
